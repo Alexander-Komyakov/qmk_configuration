@@ -23,3 +23,4 @@ DEFAULT_FOLDER = handwired/tractyl_manuform/5x6_right/teensy2pp
 
 #SPACE_CADET_ENABLE = no
 #GRAVE_ESC_ENABLE = no
+POINTING_DEVICE_GESTURES_SCROLL_ENABLE = yes

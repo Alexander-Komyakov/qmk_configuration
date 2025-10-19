@@ -49,3 +49,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_ONESHOT
 
 #define POINTING_DEVICE_RIGHT
+
+#define MOUSEKEY_WHEEL_DELAY 1
