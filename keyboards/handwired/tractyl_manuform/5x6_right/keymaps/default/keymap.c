@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SCROLL_BUF_SIZE 40
 #include QMK_KEYBOARD_H
 
 // Enum для кастомных клавиш
@@ -68,8 +69,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 
+typedef struct {
+    int x_buf;
+    int y_buf;
+} trackball;
+
 static bool scrolling_mode = false;
 static bool scroll_key_pressed = false;
+trackball achene_trackball = {.x_buf = 0, .y_buf = 0};
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Замените KC_SCROLL на вашу клавишу скролла
@@ -79,7 +86,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed && !scrolling_mode) {
             // Включаем скролл при нажатии
             scrolling_mode = true;
-            pointing_device_set_cpi(100);
+            pointing_device_set_cpi(300);
         } else if (!record->event.pressed && scrolling_mode) {
             // Выключаем скролл при отпускании
             scrolling_mode = false;
@@ -91,8 +98,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     if (scrolling_mode) {
-        mouse_report.h = mouse_report.x;
-        mouse_report.v = -mouse_report.y;
+        achene_trackball.x_buf += mouse_report.x;
+        achene_trackball.y_buf += mouse_report.y;
+        if (abs(achene_trackball.y_buf) > SCROLL_BUF_SIZE) {
+            mouse_report.v = achene_trackball.y_buf > 0 ? -1 : 1;
+            achene_trackball.y_buf   = 0;
+        }
+        if (abs(achene_trackball.x_buf) > SCROLL_BUF_SIZE) {
+            mouse_report.h = achene_trackball.x_buf > 1 ? 1 : -1;
+            achene_trackball.x_buf   = 0;
+        }
         mouse_report.x = 0;
         mouse_report.y = 0;
     }
