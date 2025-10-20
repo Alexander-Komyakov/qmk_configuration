@@ -16,6 +16,11 @@
 
 #include QMK_KEYBOARD_H
 
+// Enum для кастомных клавиш
+enum custom_keycodes {
+    KC_SCROLL = SAFE_RANGE,
+};
+
 enum custom_layers {
     _QWERTY,
     _LOWER,
@@ -35,7 +40,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       TO(1), KC_MS_BTN3,                                                       KC_EQL, KC_RBRC,
                                       KC_LSFT,KC_ENT,                                    KC_RSFT,
                                      KC_LCTL, KC_MS_BTN1,                                  KC_BSPC,
-                                      KC_LALT, KC_MS_BTN2,                        KC_LGUI, KC_SPACE
+                                      KC_SCROLL, KC_MS_BTN2,                        KC_LGUI, KC_SPACE
   ),
 
   [_LOWER] = LAYOUT_5x6_right(
@@ -46,7 +51,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      TO(2),TO(0),                                                        _______, KC_P0,
                                              _______,_______,                _______,
                                              _______,_______,                _______,
-                                             _______,_______,        _______,_______
+                                             KC_LALT,_______,        _______,_______
 
   ),
 
@@ -64,21 +69,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 static bool scrolling_mode = false;
+static bool scroll_key_pressed = false;
 
-layer_state_t layer_state_set_user(layer_state_t state) {
-    switch (get_highest_layer(state)) {
-        case _RAISE:  // If we're on the _RAISE layer enable scrolling mode
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // Замените KC_SCROLL на вашу клавишу скролла
+    if (keycode == KC_SCROLL) {
+        scroll_key_pressed = record->event.pressed;
+        
+        if (record->event.pressed && !scrolling_mode) {
+            // Включаем скролл при нажатии
             scrolling_mode = true;
-            pointing_device_set_cpi(300);
-            break;
-        default:
-            if (scrolling_mode) {  // check if we were scrolling before and set disable if so
-                scrolling_mode = false;
-                pointing_device_set_cpi(500);
-            }
-            break;
+            pointing_device_set_cpi(100);
+        } else if (!record->event.pressed && scrolling_mode) {
+            // Выключаем скролл при отпускании
+            scrolling_mode = false;
+            pointing_device_set_cpi(500);
+        }
     }
-    return state;
+    return true;
 }
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
