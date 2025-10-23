@@ -51,3 +51,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define POINTING_DEVICE_RIGHT
 
 #define MOUSEKEY_WHEEL_DELAY 1
+
+
+#define TAPPING_TERM 170

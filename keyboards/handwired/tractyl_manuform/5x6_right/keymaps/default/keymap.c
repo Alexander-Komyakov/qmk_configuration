@@ -15,7 +15,6 @@
  */
 
 #define SCROLL_BUF_SIZE 40
-#define TAPPING_TERM 0
 #include QMK_KEYBOARD_H
 
 // Define a type for as many tap dance states as you need
