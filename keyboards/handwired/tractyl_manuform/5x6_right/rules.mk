@@ -1,8 +1,8 @@
 # Build Options
 #   change yes to no to disable
 #
-#BOOTMAGIC_ENABLE = no
-BOOTMAGIC_ENABLE = yes      # Enable Bootmagic Lite
+BOOTMAGIC_ENABLE = no
+#BOOTMAGIC_ENABLE = yes      # Enable Bootmagic Lite
 MOUSEKEY_ENABLE = yes       # Mouse keys
 EXTRAKEY_ENABLE = yes       # Audio control and System control
 CONSOLE_ENABLE = no         # Console for debug
@@ -24,3 +24,6 @@ DEFAULT_FOLDER = handwired/tractyl_manuform/5x6_right/teensy2pp
 #SPACE_CADET_ENABLE = no
 #GRAVE_ESC_ENABLE = no
 POINTING_DEVICE_GESTURES_SCROLL_ENABLE = yes
+
+
+TAP_DANCE_ENABLE = yes
